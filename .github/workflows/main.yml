@@ -53,6 +53,9 @@ jobs:
   add-label:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
       - name: Add label to workflow run
         run: |
           curl -X POST \
