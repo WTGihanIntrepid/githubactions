@@ -49,6 +49,8 @@ on:
         description: "Tag for this workflow"
         required: true
 
+run-name: Deploying-${{ github.event.inputs.tag }}
+
 jobs:
   add-label:
     runs-on: ubuntu-latest
