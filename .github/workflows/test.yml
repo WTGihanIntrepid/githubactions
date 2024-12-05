@@ -1,0 +1,21 @@
+name: Label Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag for this workflow"
+        required: true
+
+run-name: Deploying-${{ github.event.inputs.tag }}
+
+jobs:
+  add-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Print Label
+        run: |
+          echo "The Github workflow ${{ github.event.inputs.tag }}"
