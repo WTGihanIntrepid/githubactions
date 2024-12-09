@@ -9,6 +9,12 @@ on:
 
 run-name: Deploying-${{ github.event.inputs.tag }}
 
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+  actions: write
+
 jobs:
   add-label:
     runs-on: ubuntu-latest
