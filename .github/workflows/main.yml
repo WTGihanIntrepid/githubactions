@@ -44,6 +44,7 @@ jobs:
 
       - name: Create GitHub Release
         uses: actions/github-script@v7
+        id: create_release
         with:
           script: |
             let changelog = "### Changelog \n - #2606: [ESD-498] Fix Github Action Integration Test Issues on Redirect \n";
@@ -56,3 +57,30 @@ jobs:
               draft: false,
               prerelease: false,
             });
+
+            core.setOutput("release_id", releaseResponse.data.id);
+
+      - name: Upload Asset
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const assetPath = "${{ inputs.asset_path }}";
+            const releaseId = "${{ steps.create_release.outputs.release_id }}";
+
+            const fileData = fs.readFileSync(assetPath);
+            const fileName = assetPath.split('/').pop();
+
+            await github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: releaseId,
+              name: "Test",
+              data: cdk.out.tar.gz,
+              headers: {
+                'content-type': 'application/gzip',
+                'content-length': fileData.length,
+              },
+            });
+
+            console.log(`Asset ${fileName} uploaded successfully.`);
