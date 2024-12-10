@@ -98,6 +98,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: mock-file-artifact
+          # github-token: ${{ secrets.git-token }}
+          repository: ${{ github.repository }}
+          run-id: 12250911971
 
       - name: Archive files with tar
         run: |
