@@ -42,45 +42,52 @@ jobs:
         run: |
           ls
 
-      - name: Create GitHub Release
+      # - name: Create GitHub Release
+      #   uses: actions/github-script@v7
+      #   id: create_release
+      #   with:
+      #     script: |
+      #       let changelog = "### Changelog \n - #2606: [ESD-498] Fix Github Action Integration Test Issues on Redirect \n";
+      #       const releaseResponse = await github.rest.repos.createRelease({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         tag_name: "1.5.0",
+      #         name: `Release 1.5.0`,
+      #         body: `### Changelog\n ${changelog}`,
+      #         draft: false,
+      #         prerelease: false,
+      #       });
+
+      #       core.setOutput("release_id", releaseResponse.data.id);
+
+      # - name: Upload Asset
+      #   uses: actions/github-script@v7
+      #   with:
+      #     script: |
+      #       const fs = require('fs');
+      #       const assetPath = "./cdk.out.tar.gz";
+      #       const releaseId = "${{ steps.create_release.outputs.release_id }}";
+
+      #       const fileData = fs.readFileSync(assetPath);
+      #       const fileName = assetPath.split('/').pop();
+
+      #       await github.rest.repos.uploadReleaseAsset({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         release_id: releaseId,
+      #         name: "Test",
+      #         data: fileData,
+      #         headers: {
+      #           'content-type': 'application/gzip',
+      #           'content-length': fileData.length,
+      #         },
+      #       });
+
+      #       console.log(`Asset ${fileName} uploaded successfully.`);
+
+      - name: Create Release Tag
+        id: release_tag
         uses: actions/github-script@v7
-        id: create_release
         with:
           script: |
-            let changelog = "### Changelog \n - #2606: [ESD-498] Fix Github Action Integration Test Issues on Redirect \n";
-            const releaseResponse = await github.rest.repos.createRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: "1.5.0",
-              name: `Release 1.5.0`,
-              body: `### Changelog\n ${changelog}`,
-              draft: false,
-              prerelease: false,
-            });
-
-            core.setOutput("release_id", releaseResponse.data.id);
-
-      - name: Upload Asset
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const assetPath = "./cdk.out.tar.gz";
-            const releaseId = "${{ steps.create_release.outputs.release_id }}";
-
-            const fileData = fs.readFileSync(assetPath);
-            const fileName = assetPath.split('/').pop();
-
-            await github.rest.repos.uploadReleaseAsset({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: releaseId,
-              name: "Test",
-              data: fileData,
-              headers: {
-                'content-type': 'application/gzip',
-                'content-length': fileData.length,
-              },
-            });
-
-            console.log(`Asset ${fileName} uploaded successfully.`);
+            core.setOutput('release_tag', 'v$(date +'%Y%m%d').40');
