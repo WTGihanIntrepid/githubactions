@@ -90,4 +90,4 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            core.setOutput('release_tag', 'v$(date +'%Y%m%d').40');
+            core.setOutput('release_tag', 'v$(date +\'%Y%m%d\').40');
