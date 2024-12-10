@@ -94,7 +94,7 @@ jobs:
       #     name: mock-file-artifact
       #     path: mock-file.txt
 
-      - name: Download Test artifact
+      - name: Download Test Artifact
         uses: actions/download-artifact@v4
         with:
           name: mock-file-artifact
