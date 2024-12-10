@@ -32,76 +32,6 @@ jobs:
           echo "Additional mock data can go here." >> mock-file.txt
           cat mock-file.txt
 
-      - name: Upload Mock File
-        uses: actions/upload-artifact@v3
-        with:
-          name: mock-file-artifact
-          path: mock-file.txt
-
-      # - name: Download Test artifact
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: mock-file-artifact
-      #     github-token: ${{ secrets.git-token }}
-      #     repository: ${{ github.repository }}
-      #     run-id: ${{ inputs.workflow-id }}
-      #     path: ./test
-
-      # - name: Archive files with tar
-      #   run: |
-      #     tar -czvf cdk.out.tar.gz ./test
-      #     echo "Archive created: cdk.out.tar.gz"
-
-      # - name: Print Label
-      #   run: |
-      #     ls
-
-      # - name: Create GitHub Release
-      #   uses: actions/github-script@v7
-      #   with:
-      #     script: |
-      #       let changelog = "### Changelog \n - #2606: [ESD-498] Fix Github Action Integration Test Issues on Redirect \n";
-      #       const releaseResponse = await github.rest.repos.createRelease({
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         tag_name: "1.2.0",
-      #         name: `Release 1.2.0`,
-      #         body: `### Changelog\n ${changelog}`,
-      #         draft: false,
-      #         prerelease: false,
-      #       });
-
-  test-two:
-    runs-on: ubuntu-latest
-    needs: add-label
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v4
-
-      # - name: Print Label
-      #   run: |
-      #     echo "The Github workflow ${{ github.event.inputs.tag }}"
-
-      # - name: Create a Mock File
-      #   run: |
-      #     echo "This is a mock file created for testing purposes." > mock-file.txt
-      #     echo "Additional mock data can go here." >> mock-file.txt
-      #     cat mock-file.txt
-
-      # - name: Upload Mock File
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: mock-file-artifact
-      #     path: mock-file.txt
-
-      - name: Download Test Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: mock-file-artifact
-          # github-token: ${{ secrets.git-token }}
-          repository: ${{ github.repository }}
-          run-id: 12250911971
-
       - name: Archive files with tar
         run: |
           tar -czvf cdk.out.tar.gz ./test
@@ -110,6 +40,10 @@ jobs:
       - name: Print Label
         run: |
           ls
+
+      # - name: Print Label
+      #   run: |
+      #     ls
 
       # - name: Create GitHub Release
       #   uses: actions/github-script@v7
