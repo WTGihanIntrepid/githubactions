@@ -98,10 +98,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: mock-file-artifact
-          github-token: ${{ secrets.git-token }}
-          repository: ${{ github.repository }}
-          run-id: ${{ inputs.workflow-id }}
-          path: ./test
 
       - name: Archive files with tar
         run: |
