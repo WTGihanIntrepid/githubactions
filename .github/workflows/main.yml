@@ -26,15 +26,16 @@ jobs:
         run: |
           echo "The Github workflow ${{ github.event.inputs.tag }}"
 
-      - name: Create a Mock File
+      - name: Create a Mock File in a Folder
         run: |
-          echo "This is a mock file created for testing purposes." > mock-file.txt
-          echo "Additional mock data can go here." >> mock-file.txt
-          cat mock-file.txt
+          mkdir -p mock-folder
+          echo "This is a mock file created for testing purposes." > mock-folder/mock-file.txt
+          echo "Additional mock data can go here." >> mock-folder/mock-file.txt
+          cat mock-folder/mock-file.txt
 
       - name: Archive files with tar
         run: |
-          tar -czvf cdk.out.tar.gz ./
+          tar -czvf cdk.out.tar.gz ./mock-folder
           echo "Archive created: cdk.out.tar.gz"
 
       - name: Print Label
