@@ -1,21 +1,95 @@
-name: Manual Job Trigger with Dependencies
+name: Label Workflow
 
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: "Deployment environment"
+      tag:
+        description: "Tag for this workflow"
         required: true
-        default: "development"
-      build_number:
-        description: "Build number"
-        required: false
+
+run-name: Deploying-${{ github.event.inputs.tag }}
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+  actions: write
 
 jobs:
-  deploy-job:
+  add-label:
     runs-on: ubuntu-latest
     steps:
-      - name: Print Inputs
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Print Label
         run: |
-          echo "Environment: ${{ github.event.inputs.environment }}"
-          echo "Build number: ${{ github.event.inputs.build_number }}"
+          echo "The Github workflow ${{ github.event.inputs.tag }}"
+
+      - name: Create a Mock File in a Folder
+        run: |
+          mkdir -p mock-folder
+          echo "This is a mock file created for testing purposes." > mock-folder/mock-file.txt
+          echo "Additional mock data can go here." >> mock-folder/mock-file.txt
+          cat mock-folder/mock-file.txt
+
+      - name: Archive files with tar
+        run: |
+          tar -czvf cdk.out.tar.gz ./mock-folder
+          echo "Archive created: cdk.out.tar.gz"
+
+      - name: Print Label
+        run: |
+          ls
+
+      # - name: Create GitHub Release
+      #   uses: actions/github-script@v7
+      #   id: create_release
+      #   with:
+      #     script: |
+      #       let changelog = "### Changelog \n - #2606: [ESD-498] Fix Github Action Integration Test Issues on Redirect \n";
+      #       const releaseResponse = await github.rest.repos.createRelease({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         tag_name: "1.5.0",
+      #         name: `Release 1.5.0`,
+      #         body: `### Changelog\n ${changelog}`,
+      #         draft: false,
+      #         prerelease: false,
+      #       });
+
+      #       core.setOutput("release_id", releaseResponse.data.id);
+
+      # - name: Upload Asset
+      #   uses: actions/github-script@v7
+      #   with:
+      #     script: |
+      #       const fs = require('fs');
+      #       const assetPath = "./cdk.out.tar.gz";
+      #       const releaseId = "${{ steps.create_release.outputs.release_id }}";
+
+      #       const fileData = fs.readFileSync(assetPath);
+      #       const fileName = assetPath.split('/').pop();
+
+      #       await github.rest.repos.uploadReleaseAsset({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         release_id: releaseId,
+      #         name: "Test",
+      #         data: fileData,
+      #         headers: {
+      #           'content-type': 'application/gzip',
+      #           'content-length': fileData.length,
+      #         },
+      #       });
+
+      #       console.log(`Asset ${fileName} uploaded successfully.`);
+
+      - name: Create Release Tag
+        id: release_tag
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const releaseTag = `v${new Date().toISOString().slice(0, 10).replace(/-/g, '')}.40`;
+            console.log("Tag", releaseTag);
+            core.setOutput('release_tag', releaseTag);
