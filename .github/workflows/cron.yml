@@ -9,8 +9,7 @@ permissions:
 
 jobs:
   build:
-    name: "Nuxt"
-    environment: ${{ inputs.environment }}
+    name: "Nuxt Feature"
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
