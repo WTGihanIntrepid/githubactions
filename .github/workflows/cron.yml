@@ -2,7 +2,7 @@ name: Build
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/4 * * * *"
 
 jobs:
   build:
@@ -12,7 +12,3 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
-
-      - name: Node Version
-        shell: bash
-        run: node -v
